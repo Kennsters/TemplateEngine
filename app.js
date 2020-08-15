@@ -10,7 +10,7 @@ const render = require('./Develop/lib/htmlRenderer')
 
 
 
-// let group = []
+// let team = []
 
 function buildEngineer () {
     inquirer
@@ -21,6 +21,7 @@ function buildEngineer () {
     })
     .then(res => {
         console.log('engineer works')
+        endList ()
     })
     .catch(err => console.log(err))
 }
@@ -34,6 +35,7 @@ function buildIntern () {
     })
     .then(res => {
         console.log('student works')
+        endList ()
     })
     .catch(err => console.log(err))
 }
@@ -47,13 +49,31 @@ function buildManager () {
     })
     .then(res => {
         console.log('manager works')
+        endList ()
     })
     .catch(err => console.log(err))
 }
 
-// function endList () {
-
-// }
+function endList () {
+    inquirer
+    .prompt({
+        type:'list',
+        name: 'action',
+        choices: ['Make another', 'Finish'],
+        message: 'Would you like to add another employee?'
+    })
+    .then (res => {
+        switch (res.action) {
+            case 'Make another':
+                buildEmployee()
+                break
+            case 'Finish':
+                console.log('your outa here!')
+                break
+        }
+    })
+    .catch(err => console.log(err))
+}
 
 function buildEmployee () {
     inquirer
