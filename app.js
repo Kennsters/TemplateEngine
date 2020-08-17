@@ -1,46 +1,50 @@
 const inquirer = require('inquirer')
 const fs = require('fs')
-
-const Employee = require('./Develop/lib/Employee.js')
+const path = require('path')
 const Engineer = require('./Develop/lib/Engineer.js')
 const Intern = require('./Develop/lib/Intern.js')
 const Manager = require('./Develop/lib/Manager.js')
+
+const OUTPUT_DIR = path.resolve(__dirname, "output");
+const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require('./Develop/lib/htmlRenderer')
 
 
 
-// let team = []
+let employees = []
 
-function buildEngineer () {
+function buildEngineer (res) {
     inquirer
     .prompt ({
         type: 'input',
         name: 'github',
         message: 'What is their Github username?'
     })
-    .then(res => {
+    .then(employee => {
         console.log('engineer works')
+        employees.push(new Engineer(res.role, res.name, res.email, res.id, employee.github))
         endList ()
     })
     .catch(err => console.log(err))
 }
 
-function buildIntern () {
+function buildIntern (res) {
     inquirer
     .prompt ({
         type: 'input',
         name: 'school',
         message: 'What school do they attend?'
     })
-    .then(res => {
+    .then(employee => {
         console.log('student works')
+        employees.push(new Intern(res.role, res.name, res.email, res.id, employee.school))
         endList ()
     })
     .catch(err => console.log(err))
 }
 
-function buildManager () {
+function buildManager (res) {
     inquirer
     .prompt ({
         type: 'input',
@@ -49,6 +53,7 @@ function buildManager () {
     })
     .then(res => {
         console.log('manager works')
+        employees.push(new Manager(res.role, res.name, res.email, res.id, employee.officeNumber))
         endList ()
     })
     .catch(err => console.log(err))
@@ -69,6 +74,9 @@ function endList () {
                 break
             case 'Finish':
                 console.log('your outa here!')
+                const html = []
+                fs.writeFileSync(outputPath, render(employees), html)
+                // fs.writeFileSync(path.join(__dirname, 'output', 'team.html'), html)
                 break
         }
     })
@@ -80,7 +88,7 @@ function buildEmployee () {
     .prompt([
         {
             type: 'list',
-            name: 'type',
+            name: 'role',
             choices: ['Engineer', 'Intern', 'Manager'],
             message: 'What is their title?'
         },
@@ -101,18 +109,18 @@ function buildEmployee () {
         }
     ])
     .then(res => {
-        switch (res.type) {
+        switch (res.role) {
             case 'Engineer':
                 console.log('Engineer')
-                buildEngineer()
+                buildEngineer(res)
                 break
             case 'Intern': 
                 console.log('Intern')
-                buildIntern()
+                buildIntern(res)
                 break
             case 'Manager':
                 console.log('Manager')
-                buildManager()
+                buildManager(res)
                 break
         }
     })
