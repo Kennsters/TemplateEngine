@@ -10,8 +10,6 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require('./Develop/lib/htmlRenderer')
 
-
-
 let employees = []
 
 function buildEngineer (res) {
@@ -22,8 +20,7 @@ function buildEngineer (res) {
         message: 'What is their Github username?'
     })
     .then(employee => {
-        console.log('engineer works')
-        employees.push(new Engineer(res.role, res.name, res.email, res.id, employee.github))
+        employees.push(new Engineer(res.name, res.id, res.email,employee.github))
         endList ()
     })
     .catch(err => console.log(err))
@@ -37,8 +34,7 @@ function buildIntern (res) {
         message: 'What school do they attend?'
     })
     .then(employee => {
-        console.log('student works')
-        employees.push(new Intern(res.role, res.name, res.email, res.id, employee.school))
+        employees.push(new Intern(res.name, res.id, res.email, employee.school))
         endList ()
     })
     .catch(err => console.log(err))
@@ -51,9 +47,8 @@ function buildManager (res) {
         name: 'officeNumber',
         message: 'What is their office number?'
     })
-    .then(res => {
-        console.log('manager works')
-        employees.push(new Manager(res.role, res.name, res.email, res.id, employee.officeNumber))
+    .then(employee => {
+        employees.push(new Manager(res.name, res.id, res.email, employee.officeNumber))
         endList ()
     })
     .catch(err => console.log(err))
@@ -73,10 +68,8 @@ function endList () {
                 buildEmployee()
                 break
             case 'Finish':
-                console.log('your outa here!')
                 const html = []
                 fs.writeFileSync(outputPath, render(employees), html)
-                // fs.writeFileSync(path.join(__dirname, 'output', 'team.html'), html)
                 break
         }
     })
@@ -111,15 +104,12 @@ function buildEmployee () {
     .then(res => {
         switch (res.role) {
             case 'Engineer':
-                console.log('Engineer')
                 buildEngineer(res)
                 break
             case 'Intern': 
-                console.log('Intern')
                 buildIntern(res)
                 break
             case 'Manager':
-                console.log('Manager')
                 buildManager(res)
                 break
         }
