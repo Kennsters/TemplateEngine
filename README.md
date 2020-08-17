@@ -4,6 +4,7 @@
 In this assignment we are to build a template generator for a manager that wants to build a webpage that will display their team's basic info. 
 
 ##Assignment 
+
 ###NPM
 We started the homework by installing the NPM. The two that we used are Inquirer (for the main functionality of the assignment) and Jest(to test the constructors that we built)
 
